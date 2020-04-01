@@ -10,7 +10,7 @@ public class Arguments {
 
     @Parameter(names = {"--browser", "-b"}, description = "Browser type", required = true,
             converter = BrowserTypeConverter.class)
-    private BrowserType browserType;
+    private BrowserType browserType = BrowserType.CHROME;
 
     public Arguments() {
     }
