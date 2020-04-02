@@ -1,4 +1,4 @@
-package com.lightpointglobal.bo;
+package com.lightpointglobal.framework.driver;
 
 public class NotSupportedBrowserException extends Exception {
 

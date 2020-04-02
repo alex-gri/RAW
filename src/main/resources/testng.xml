@@ -1,0 +1,9 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
+
+<suite name="Onliner" verbose="1">
+    <test name="IPhone's price" >
+        <classes>
+            <class name="com.lightpointglobal.test.OnlinerTest"/>
+        </classes>
+    </test>
+</suite>

@@ -1,4 +1,4 @@
-package com.lightpointglobal.logger;
+package com.lightpointglobal.framework.logger;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

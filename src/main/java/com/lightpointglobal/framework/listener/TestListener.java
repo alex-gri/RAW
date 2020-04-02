@@ -1,7 +1,7 @@
-package com.lightpointglobal.listener;
+package com.lightpointglobal.framework.listener;
 
-import com.lightpointglobal.logger.Log;
-import com.lightpointglobal.ui.Browser;
+import com.lightpointglobal.framework.logger.Log;
+import com.lightpointglobal.framework.ui.Browser;
 import org.testng.ITestListener;
 import org.testng.ITestResult;
 
