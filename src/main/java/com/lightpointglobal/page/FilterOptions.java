@@ -3,7 +3,7 @@ package com.lightpointglobal.page;
 import com.lightpointglobal.framework.ui.Browser;
 import org.openqa.selenium.By;
 
-abstract public class FilterOptions {
+public abstract class FilterOptions {
 
     private By appleCheckBox = By.xpath("//span[text()='Apple']/ancestor::li//span[@class='i-checkbox__faux']");
     private By nextAfterAppleCheckBox = By.xpath("//span[text()='Nokia']/ancestor::li//span[@class='i-checkbox__faux']");

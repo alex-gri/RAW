@@ -7,17 +7,13 @@ import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.FluentWait;
-import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.File;
 import java.io.IOException;
-import java.time.Duration;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
-import java.util.function.Function;
 
 public class Browser implements WrapsDriver {
 
@@ -53,7 +49,7 @@ public class Browser implements WrapsDriver {
         } catch (WebDriverException e) {
             Log.error(e.getMessage());
         } finally {
-            instance.set(null);
+            instance.remove();
             Log.debug("Browser has stopped!");
         }
     }
@@ -74,40 +70,41 @@ public class Browser implements WrapsDriver {
 
     public void click(By by) {
         waitForDOMToBeCompleted();
-        WebElement element = waitForPresenceOfElementLocated(by);
+        WebElement element = waitForVisibilityOfElementLocated(by);
         Log.info("Click: " + by);
         element.click();
     }
 
     public void moveTo(By by) {
         waitForDOMToBeCompleted();
-        WebElement element = waitForPresenceOfElementLocated(by);
+        WebElement element = waitForVisibilityOfElementLocated(by);
         Actions actions = new Actions(wrappedDriver);
         Log.info("Moving to: " + by);
         actions.moveToElement(element).perform();
     }
 
-    public String getText(By by) {
-        Log.debug("Getting text from: " + by);
-        return waitForVisibilityOfElementLocated(by).getText();
-    }
-
-    public WebElement waitForPresenceOfElementLocated(By by) {
-        Log.debug("Waiting for presence of element by: " + by);
-        return new WebDriverWait(wrappedDriver, Constants.VISIBILITY_TIMEOUT_SECONDS)
-                .until(ExpectedConditions.presenceOfElementLocated(by));
+    public String getTextAvoidingStaleness(By by) {
+        int count = 0;
+        boolean successfull = false;
+        String price = "";
+        Log.info("Trying to get the text avoiding staleness by: " + by);
+        while (count < 30 && !successfull) {
+            try {
+                WebElement element = wrappedDriver.findElement(by);
+                price = element.getText();
+                successfull = true;
+            } catch (StaleElementReferenceException e) {
+                Log.error("Stale reference, trying again... " + e.getMessage());
+                count++;
+            }
+        }
+        return price;
     }
 
     public WebElement waitForVisibilityOfElementLocated(By by) {
         Log.debug("Waiting for visibility of element by: " + by);
         return new WebDriverWait(wrappedDriver, Constants.VISIBILITY_TIMEOUT_SECONDS)
                 .until(ExpectedConditions.visibilityOfElementLocated(by));
-    }
-
-    public String waitForElementFluently(By by) {
-        Wait<WebDriver> wait = new WebDriverWait(wrappedDriver, Constants.VISIBILITY_TIMEOUT_SECONDS, 1000)
-                .ignoring(StaleElementReferenceException.class);
-        return wait.until(ExpectedConditions.visibilityOfElementLocated(by)).getText();
     }
 
     // Is used by TestListener to capture the moment of failure.
